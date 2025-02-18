@@ -1,0 +1,36 @@
+#from cryptography.hazmat.primitives import serialization
+#import asyncio
+# from weatheralgo.clients import  KalshiWebSocketClient
+import logging
+
+from weatheralgo.model import weather_model
+from weatheralgo import util_functions
+# from weatheralgo.clients import client
+
+
+
+# Initialize the WebSocket client
+# ws_client = KalshiWebSocketClient(
+#     key_id=client.key_id,
+#     private_key=client.private_key,
+#     environment=client.environment
+# )
+
+# Connect via WebSocket
+# asyncio.run(ws_client.connect())
+
+if __name__ == "__main__":
+
+
+    driver =  weather_model.initialize_driver()
+    util_functions.logging_settings()
+    try:
+       weather_model.scrape_dynamic_table(driver)
+    except KeyboardInterrupt:
+        logging.info("Script interrupted by user.")
+    finally:
+        driver.quit()
+        logging.info("WebDriver closed.")
+
+
+
