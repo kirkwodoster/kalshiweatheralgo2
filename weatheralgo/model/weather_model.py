@@ -10,7 +10,6 @@ from selenium.webdriver.chrome.options import Options
 
 from weatheralgo import trade_functions
 from weatheralgo import scrape_functions
-from weatheralgo.input_variables import MARKET_DENVER, LR_LENGTH, SCRAPE_INTERVAL, TIMEZONE_DENVER, XML_URL_DENVER, URL_DENVER
 from weatheralgo import util_functions
 
 
@@ -22,16 +21,16 @@ def initialize_driver():
     chrome_options.add_argument("--remote-debugging-port=9222")
     chrome_options.add_argument("--user-data-dir=/tmp/chrome-data")
     chrome_options.add_argument("--headless")
+    chrome_options.add_argument('--log-level=3')
     ua = UserAgent()
     chrome_options.add_argument(f"user-agent={ua.random}")
     return webdriver.Chrome(service=ChromeService(ChromeDriverManager().install()), options=chrome_options)
 
 
-class seriesSelector:
-    def __init__(self, )
 
 # Main function to scrape and process data
-def scrape_dynamic_table(driver, url=URL_DENVER, timezone= TIMEZONE_DENVER):
+def scrape_dynamic_table(driver, city, market, timezone, url, xml_url, lr_length, scraping_hours, 
+                         hours_from_max, count, yes_price, balance_min):
     
 
     util_functions.logging_settings()
@@ -41,24 +40,21 @@ def scrape_dynamic_table(driver, url=URL_DENVER, timezone= TIMEZONE_DENVER):
     restart_threshold = 50  # Restart WebDriver every 50 iterations
     loop_counter = 0
 
-    logging.info('Loading Scrape Dynamic Table')
+    logging.info(f'Algo Loading in {city}')
 
     while True:
-        begin_scraping = scrape_functions.begin_scrape(timezone=TIMEZONE_DENVER)
-        trade_made_today = util_functions.trade_today(market=MARKET_DENVER, timezone=TIMEZONE_DENVER)
-        logging.info('While Loop')
+        begin_scraping = scrape_functions.begin_scrape(timezone=timezone, scraping_hours=scraping_hours)
+        trade_made_today = util_functions.trade_today(market=market, timezone=timezone)
+        
         time.sleep(3)
         try:
-            logging.info(f'being_scraping is {begin_scraping}')
-            logging.info(f'trade_made_today is {trade_made_today}')
+
             if begin_scraping and not trade_made_today:
-                logging.info('Begin Scrape')
-                logging.info('No Trade Made Today')
                 
-                scrape_temp = scrape_functions.scrape_temperature(driver=driver, url=URL_DENVER, timezone=TIMEZONE_DENVER)
+                scrape_temp = scrape_functions.scrape_temperature(driver=driver, url=url, timezone=timezone)
                 current_date = scrape_temp[0]
                 current_temp = scrape_temp[1]
-                logging.info(f'Dates length {len(dates)}')
+            
                 
                 if len(dates) == 0 or (len(dates) > 0 and dates[-1] != current_date):
                     
@@ -70,31 +66,39 @@ def scrape_dynamic_table(driver, url=URL_DENVER, timezone= TIMEZONE_DENVER):
 
                     #checks to see if currentc temp is at max of available markets then makes bet
                 
-                    current_temp_is_max = trade_functions.if_temp_reaches_max(current_temp=current_temp, market = MARKET_DENVER)
+                    current_temp_is_max = trade_functions.if_temp_reaches_max(current_temp=current_temp, 
+                                                                              market = market, 
+                                                                              yes_price=yes_price, 
+                                                                              count=count,
+                                                                              balance_min=balance_min)
                     if current_temp_is_max:
                         logging.info('Max Temperature Reached')
-                       
-                        temperatures = []
-                        dates = []
    
                     trade_criteria = trade_functions.trade_criteria_met(temperatures=temperatures, 
-                                                              lr_length=LR_LENGTH,
-                                                              timezone=TIMEZONE_DENVER, 
-                                                              xml_url=XML_URL_DENVER)
+                                                              lr_length=lr_length,
+                                                              timezone=timezone, 
+                                                              xml_url=xml_url,
+                                                              hours_from_max= hours_from_max)
                     if trade_criteria:
                         
-                        trade_execute = trade_functions.trade_execution(temperatures=temperatures,market=MARKET_DENVER)
+                        trade_execute = trade_functions.trade_execution(temperatures=temperatures,
+                                                                        market=market,
+                                                                        yes_price=yes_price,
+                                                                        count=count, 
+                                                                        balance_min=balance_min)
                         if trade_execute:
                             logging.info('Trade Criteria True')
-                           
-                            temperatures = []
-                            dates = []
+                  
                 
                 else:
-                    # rand = randint(5, 10)
-                    # time.sleep(rand)
-                    logging.info('to_append is False')
+                    time.sleep(1)
+                    # logging.info('to_append is False')
             elif trade_made_today:
+                
+                is_order_filled = util_functions.order_filled(market)
+                ticker = util_functions.weather_config(market)
+                if is_order_filled:
+                    logging.info(f'Order filled and saved: {ticker}')
                 temperatures = []
                 dates = []
             else:

@@ -5,6 +5,8 @@ import logging
 
 from weatheralgo.model import weather_model
 from weatheralgo import util_functions
+from weatheralgo.input_variables import Input
+from weatheralgo.clients import client
 # from weatheralgo.clients import client
 
 
@@ -20,12 +22,17 @@ from weatheralgo import util_functions
 # asyncio.run(ws_client.connect())
 
 if __name__ == "__main__":
+    
+    
+    input = Input()
+    input.user_input_function()
 
+    dict_input = input.user_dict_output()
 
     driver =  weather_model.initialize_driver()
     util_functions.logging_settings()
     try:
-       weather_model.scrape_dynamic_table(driver)
+       weather_model.scrape_dynamic_table(driver, **dict_input)
     except KeyboardInterrupt:
         logging.info("Script interrupted by user.")
     finally:

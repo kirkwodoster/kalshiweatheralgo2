@@ -10,7 +10,7 @@ import time
 
 
     
-def scrape_temperature(driver, url, timezone):
+def scrape_temperature(driver, url, timezone) -> list[str]:
     
     try:
         driver.get(url)
@@ -40,13 +40,13 @@ def scrape_temperature(driver, url, timezone):
     except Exception as e:
         logging.error(f"Error scrape_temperature: {e}")
         return None
-def begin_scrape(timezone):
+def begin_scrape(timezone, scraping_hours):
     
     try:
         current_time = datetime.now(timezone).hour
         
-        start_scrape = current_time >= 9
-        end_scrape = current_time <= 17
+        start_scrape = current_time >= scraping_hours[0]
+        end_scrape = current_time <= scraping_hours[1]
 
         if start_scrape and end_scrape:
             return True

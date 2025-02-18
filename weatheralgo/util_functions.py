@@ -2,12 +2,11 @@ import datetime as dt
 import csv
 import logging
 from datetime import datetime
+import logging
 
 from weatheralgo.clients import client
 
-
-
-    
+   
 def trade_to_csv(order_id : str, ticker: str):
     try:
         trade_data = client.get_fills(order_id = order_id)['fills'][0]
@@ -46,7 +45,7 @@ def trade_to_csv(order_id : str, ticker: str):
         
         column_names = data_to_csv.keys()
 
-        with open('data/trade_data.csv', 'a', newline='') as file:
+        with open('util/data/trade_data.csv', 'a', newline='') as file:
             writer = csv.DictWriter(file, column_names)
             writer.writerow(data_to_csv)
             
@@ -137,6 +136,26 @@ def trade_today(market, timezone):
     except Exception as e:
         logging.error(f"Error Trade Today: {e}")
 
+
+def order_filled(market):
+    try:
+        market_ticker = weather_config(market)
+        filled = client.get_orders(ticker=market_ticker)['orders'][0]['status']
+        order_id = client.get_orders(ticker=market_ticker)['orders'][0]['order_id']
+        
+        if filled == 'executed':
+           logging.info(f'Order Executed {market_ticker}')
+           trade_to_csv(order_id=order_id, ticker=market_ticker)
+        else:
+            logging.info(f'Order {market_ticker} Not Filled')
+
+    except Exception as e:
+        logging.error(f"Error Trade Today: {e}")
+            
+            
+            
+            
+
     
 def logging_settings():
     return logging.basicConfig(
@@ -144,41 +163,3 @@ def logging_settings():
     format="%(asctime)s - %(levelname)s - %(message)s",  # Define the log format
     handlers=[logging.StreamHandler()]  # Output logs to the terminal
 )
-
-
-########## old ##############
-
-# def order_pipeline(highest_temp: int, market: str):
-
-#     today = dt.date.today()
-#     todaysDate = today.strftime('%y%b%d').upper()
-#     event = f'{market}-{todaysDate}'
-
-#     listofMarkets = weather_config(market)
-#     minMarketTemp = list(listofMarkets.values())[0]
-#     maxMarketTemp = list(listofMarkets.values())[-1]
-#     listofMarketsAdj = dict(list(listofMarkets.items())[1:-1])
-
-#     if highest_temp < minMarketTemp:
-#         tempMarket = list(listofMarkets)[0]
-#     elif highest_temp > maxMarketTemp:
-#         tempMarket = list(listofMarkets)[-1]
-#     else:
-#         for key, value in listofMarketsAdj.items():
-#             if highest_temp in value:
-#                 tempMarket = key
-
-#     return f'{event}-{tempMarket}'
-
-
-# def trade_today(market=MARKET):
-#     try:
-#         today = datetime.now(TIMEZONE)
-#         todaysDate = today.strftime('%y%b%d').upper()
-#         event = f'{market}-{todaysDate}'
-#         orders = client.get_orders(event_ticker = event)['orders']
-#         if orders == 0:
-#             return True
-
-#     except Exception as e:
-#         logging.error(f"Error Trade Today: {e}")
