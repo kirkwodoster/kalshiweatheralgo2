@@ -12,9 +12,10 @@ pandas
 numpy
 uuid
 fake_useragent
-time
+python-time
 random
 fake_useragent
 pytho-dotenv
 webdriver-manager
 scikit-learn
+

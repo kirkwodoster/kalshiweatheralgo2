@@ -23,6 +23,9 @@ from weatheralgo.clients import client
 
 if __name__ == "__main__":
     
+    # x = util_functions.weather_config(market='KXHIGHDEN')
+    # print(x)
+    
     
     input = Input()
     input.user_input_function()

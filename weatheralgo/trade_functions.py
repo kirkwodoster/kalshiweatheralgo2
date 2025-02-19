@@ -28,7 +28,7 @@ def trade_execution(market: str, temperatures: list, balance_min: int,  yes_pric
             order_id = str(uuid.uuid4())
             client.create_order(ticker=market_ticker, client_order_id=order_id,  yes_price=yes_price, count=count)
             logging.info(f'Order Submitted {market_ticker}')
-            util_functions.trade_to_csv(order_id=order_id, ticker=market_ticker)
+          
             
             return True
         else:
@@ -46,8 +46,7 @@ def if_temp_reaches_max(current_temp: int, market: str, yes_price: int, count: i
             order_id = str(uuid.uuid4())
             client.create_order(ticker=market_ticker,client_order_id=order_id,count=count,yes_price=yes_price)
             logging.info(f"Max temp reached and bet made {current_temp}")
-            util_functions.trade_to_csv(order_id=order_id, ticker=market_ticker)
-           
+         
             return True
         else:
             False
@@ -62,9 +61,10 @@ def trade_criteria_met(temperatures: list, lr_length: int, timezone, xml_url: st
         hour_max_temp = scrape_functions.xml_scrape(xml_url, timezone)[1]
 
         start_scrape = hour_max_temp - hours_from_max >= current_time
+        end_scrape = hour_max_temp + hours_from_max <= current_time
         length = len(temperatures) >= lr_length
 
-        if start_scrape and length:
+        if start_scrape and end_scrape and length:
             x = np.arange(0, lr_length).reshape(-1,1)
             temp_length = temperatures[-lr_length:]
             regressor = LinearRegression().fit(x, temp_length)
