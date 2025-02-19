@@ -91,16 +91,16 @@ def scrape_dynamic_table(driver, city, market, timezone, url, xml_url, lr_length
                   
                 
                 else:
-                    time.sleep(1)
-                    # logging.info('to_append is False')
+                    time.sleep(3)
+                   
             elif trade_made_today:
-                
-                is_order_filled = util_functions.order_filled(market)
-                ticker = util_functions.weather_config(market)
-                if is_order_filled:
-                    logging.info(f'Order filled and saved: {ticker}')
                 temperatures = []
                 dates = []
+                
+                is_order_filled = util_functions.order_filled(market)
+                if is_order_filled:
+                    logging.info(f'Order filled and saved: {market}')
+               
             else:
                 continue
           

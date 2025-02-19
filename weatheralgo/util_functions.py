@@ -77,7 +77,7 @@ def weather_config(market):
                     if counter == 1:
                         temp_adj.append(int(remove_t)-2)
                     elif counter == 2:
-                        temp_adj.append(int(remove_t)+2) # adjust for rounding error
+                        temp_adj.append(int(remove_t)+1) # adjust for rounding error
                         
                 elif "B" in i:
                     remove_b = i.strip('B')
