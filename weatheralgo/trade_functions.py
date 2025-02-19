@@ -60,11 +60,10 @@ def trade_criteria_met(temperatures: list, lr_length: int, timezone, xml_url: st
         current_time = datetime.now(timezone).hour
         hour_max_temp = scrape_functions.xml_scrape(xml_url, timezone)[1]
 
-        start_scrape = hour_max_temp - hours_from_max >= current_time
-        end_scrape = hour_max_temp + hours_from_max <= current_time
+        trade_range = current_time - hour_max_temp <= hour_max_temp <= current_time + hour_max_temp
         length = len(temperatures) >= lr_length
 
-        if start_scrape and end_scrape and length:
+        if trade_range and length:
             x = np.arange(0, lr_length).reshape(-1,1)
             temp_length = temperatures[-lr_length:]
             regressor = LinearRegression().fit(x, temp_length)
