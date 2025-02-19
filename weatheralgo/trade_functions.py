@@ -60,7 +60,7 @@ def trade_criteria_met(temperatures: list, lr_length: int, timezone, xml_url: st
         current_time = datetime.now(timezone).hour
         hour_max_temp = scrape_functions.xml_scrape(xml_url, timezone)[1]
 
-        trade_range = current_time - hour_max_temp <= hour_max_temp <= current_time + hour_max_temp
+        trade_range = (current_time >= hour_max_temp - hours_from_max) and (current_time <= hour_max_temp + hours_from_max)
         length = len(temperatures) >= lr_length
 
         if trade_range and length:
