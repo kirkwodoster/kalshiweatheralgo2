@@ -6,7 +6,7 @@ import pytz
 from weatheralgo.model import weather_model
 from weatheralgo import util_functions
 from weatheralgo.input_variables import Input
-from weatheralgo.clients import client
+
 # from weatheralgo.clients import client
 
 
@@ -24,30 +24,20 @@ from weatheralgo.clients import client
 if __name__ == "__main__":
     
 
-    trade_made_today = util_functions.trade_today(market='KXHIGHDEN', timezone= pytz.timezone('America/Denver'))
-    print(trade_made_today)
-    # orders = client.get_orders(event_ticker ='KXHIGHDEN-25FEB18')['orders']
-    # print(len(orders))
-    # if orders:
-    #     print(True)
-    # else:
-    #     print(False)
+    input = Input()
+    input.user_input_function()
 
-    
-    # input = Input()
-    # input.user_input_function()
+    dict_input = input.user_dict_output()
 
-    # dict_input = input.user_dict_output()
-
-    # driver =  weather_model.initialize_driver()
-    # util_functions.logging_settings()
-    # try:
-    #    weather_model.scrape_dynamic_table(driver, **dict_input)
-    # except KeyboardInterrupt:
-    #     logging.info("Script interrupted by user.")
-    # finally:
-    #     driver.quit()
-    #     logging.info("WebDriver closed.")
+    driver =  weather_model.initialize_driver()
+    util_functions.logging_settings()
+    try:
+       weather_model.scrape_dynamic_table(driver, **dict_input)
+    except KeyboardInterrupt:
+        logging.info("Script interrupted by user.")
+    finally:
+        driver.quit()
+        logging.info("WebDriver closed.")
 
 
 
