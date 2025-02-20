@@ -1,7 +1,8 @@
 from fake_useragent import UserAgent
 import logging
-import numpy as np
+
 import time
+import random
 
 from selenium import webdriver
 from selenium.webdriver.chrome.service import Service as ChromeService
@@ -37,16 +38,19 @@ def scrape_dynamic_table(driver, city, market, timezone, url, xml_url, lr_length
     temperatures = []
     dates = []
     
-    restart_threshold = 50  # Restart WebDriver every 50 iterations
+    restart_threshold = 40  # Restart WebDriver every 50 iterations
     loop_counter = 0
+
+    rand = random.randint(20, 40)
 
     logging.info(f'Algo Loading in {city}')
 
     while True:
         begin_scraping = scrape_functions.begin_scrape(timezone=timezone, scraping_hours=scraping_hours)
         trade_made_today = util_functions.trade_today(market=market, timezone=timezone)
+
         
-        time.sleep(3)
+        time.sleep(rand)
         try:
 
             if begin_scraping and not trade_made_today:
@@ -75,10 +79,10 @@ def scrape_dynamic_table(driver, city, market, timezone, url, xml_url, lr_length
                         logging.info('Max Temperature Reached')
    
                     trade_criteria = trade_functions.trade_criteria_met(temperatures=temperatures, 
-                                                              lr_length=lr_length,
-                                                              timezone=timezone, 
-                                                              xml_url=xml_url,
-                                                              hours_from_max= hours_from_max)
+                                                                        lr_length=lr_length,
+                                                                        timezone=timezone, 
+                                                                        xml_url=xml_url,
+                                                                        hours_from_max= hours_from_max)
                     if trade_criteria:
                         
                         trade_execute = trade_functions.trade_execution(temperatures=temperatures,
@@ -91,7 +95,7 @@ def scrape_dynamic_table(driver, city, market, timezone, url, xml_url, lr_length
                   
                 
                 else:
-                    time.sleep(3)
+                    time.sleep(rand)
                    
             elif trade_made_today:
                 temperatures = []
@@ -114,7 +118,8 @@ def scrape_dynamic_table(driver, city, market, timezone, url, xml_url, lr_length
                 driver = initialize_driver()
                 loop_counter = 0  # Reset counter
 
-            time.sleep(3)
+            
+            time.sleep(rand)
 
 
 

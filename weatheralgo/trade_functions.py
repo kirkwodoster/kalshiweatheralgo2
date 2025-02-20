@@ -13,9 +13,6 @@ from weatheralgo import util_functions
 from weatheralgo import scrape_functions
 
 
-
-
-
 def trade_execution(market: str, temperatures: list, balance_min: int,  yes_price: int, count: int):
     try:
         highest_temp = np.array(temperatures).max()

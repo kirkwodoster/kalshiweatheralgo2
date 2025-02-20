@@ -129,6 +129,7 @@ def trade_today(market, timezone):
         orders = client.get_orders(event_ticker=event)['orders']
         
         if len(orders) >= 1:
+            
             logging.info('Trade made today')
             return True
         else:

@@ -2,7 +2,7 @@
 #import asyncio
 # from weatheralgo.clients import  KalshiWebSocketClient
 import logging
-import pytz
+
 from weatheralgo.model import weather_model
 from weatheralgo import util_functions
 from weatheralgo.input_variables import Input
@@ -23,6 +23,7 @@ from weatheralgo.input_variables import Input
 
 if __name__ == "__main__":
     
+
 
     input = Input()
     input.user_input_function()
