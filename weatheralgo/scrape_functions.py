@@ -40,6 +40,7 @@ def scrape_temperature(driver, url, timezone) -> list[str]:
     except Exception as e:
         logging.error(f"Error scrape_temperature: {e}")
         return None
+
 def begin_scrape(timezone, scraping_hours):
     
     try:
@@ -58,8 +59,7 @@ def begin_scrape(timezone, scraping_hours):
 
 def xml_scrape(xml_url, timezone):
 
-    try: 
-        
+    try:
         response = requests.get(xml_url)
         root = ET.fromstring(response.content)
 
@@ -68,9 +68,10 @@ def xml_scrape(xml_url, timezone):
 
         temperature_element = root.find('.//temperature[@type="hourly"]')
         value_elements = temperature_element.findall('.//value')
-        temp = [int(value.text) for value in value_elements]
-
-        forecasted = pd.DataFrame({'DateTime': dates, 'Temperature': temp})
+        temp = [int(value.text) for value in value_elements if isinstance(value.text, str)]
+        temp_length = len(temp)
+ 
+        forecasted = pd.DataFrame({'DateTime': dates[:temp_length], 'Temperature': temp})
         forecasted['DateTime'] = pd.to_datetime(forecasted['DateTime'])
         forecasted = forecasted.sort_values(by='DateTime')
 
@@ -80,9 +81,8 @@ def xml_scrape(xml_url, timezone):
         date = forecasted['DateTime'].iloc[next_day_high]
         hour_of_high = forecasted['DateTime'].iloc[next_day_high].hour
         temp_high = forecasted['Temperature'].iloc[next_day_high]
-        
+
         return [date, hour_of_high, temp_high]
 
-
     except Exception as e:
-        logging.error(f"Error scraping XML: {e}")
+      print(e)

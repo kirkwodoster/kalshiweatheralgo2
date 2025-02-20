@@ -26,7 +26,6 @@ def trade_execution(market: str, temperatures: list, balance_min: int,  yes_pric
             client.create_order(ticker=market_ticker, client_order_id=order_id,  yes_price=yes_price, count=count)
             logging.info(f'Order Submitted {market_ticker}')
           
-            
             return True
         else:
             return False

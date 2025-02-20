@@ -49,7 +49,6 @@ def scrape_dynamic_table(driver, city, market, timezone, url, xml_url, lr_length
         begin_scraping = scrape_functions.begin_scrape(timezone=timezone, scraping_hours=scraping_hours)
         trade_made_today = util_functions.trade_today(market=market, timezone=timezone)
 
-        
         time.sleep(rand)
         try:
 

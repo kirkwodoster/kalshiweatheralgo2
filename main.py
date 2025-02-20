@@ -2,10 +2,11 @@
 #import asyncio
 # from weatheralgo.clients import  KalshiWebSocketClient
 import logging
-
+import pytz
 from weatheralgo.model import weather_model
 from weatheralgo import util_functions
 from weatheralgo.input_variables import Input
+from weatheralgo.clients import client
 
 # from weatheralgo.clients import client
 
@@ -24,6 +25,9 @@ from weatheralgo.input_variables import Input
 if __name__ == "__main__":
     
 
+    #  x = client.get_fills(ticker = 'KXHIGHDEN-25FEB20-B26.5')
+    #  print(x)
+    
 
     input = Input()
     input.user_input_function()
