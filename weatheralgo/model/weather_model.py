@@ -104,6 +104,8 @@ def scrape_dynamic_table(driver, city, market, timezone, url, xml_url, lr_length
                 is_order_filled = util_functions.order_filled(market)
                 if is_order_filled:
                     logging.info(f'Order filled and saved: {market}')
+                else:
+                    continue
                
             else:
                 continue

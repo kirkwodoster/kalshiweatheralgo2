@@ -122,6 +122,7 @@ def order_pipeline(highest_temp: int, market: str):
 
 
 def trade_today(market, timezone):
+
     try:
         today = datetime.now(timezone)
         todaysDate = today.strftime('%y%b%d').upper()
@@ -129,7 +130,6 @@ def trade_today(market, timezone):
         orders = client.get_orders(event_ticker=event)['orders']
         
         if len(orders) >= 1:
-            
             logging.info('Trade made today')
             return True
         else:
@@ -142,23 +142,26 @@ def trade_today(market, timezone):
 def order_filled(market):
     try:
         market_ticker = weather_config(market)
-        filled = client.get_orders(ticker=market_ticker)['orders'][0]['status']
-        order_id = client.get_orders(ticker=market_ticker)['orders'][0]['order_id']
+        orders = client.get_orders(ticker=market_ticker)['orders']
         
-        if filled == 'executed':
-           logging.info(f'Order Executed {market_ticker}')
-           trade_to_csv(order_id=order_id, ticker=market_ticker)
-        else:
-            logging.info(f'Order {market_ticker} Not Filled')
-
+        if orders:  # Check if there are any orders
+            order = orders[0]
+            filled = order['status']
+            
+            if filled == 'executed':
+                order_id = order['order_id']
+                logging.info(f'Order Executed {market_ticker}')
+                trade_to_csv(order_id=order_id, ticker=market_ticker)
+                logging.info(f'Trade {market_ticker} saved')
+            else:
+                # Do nothing if the order status is not 'executed'
+                pass
+        
     except Exception as e:
-        logging.error(f"Error Trade Today: {e}")
+        logging.error(f"Order Filled error: {e}")
             
             
             
-            
-
-    
 def logging_settings():
     return logging.basicConfig(
     level=logging.INFO,  # Set the logging level (DEBUG, INFO, WARNING, ERROR, CRITICAL)
