@@ -31,7 +31,7 @@ def initialize_driver():
 
 # Main function to scrape and process data
 def scrape_dynamic_table(driver, city, market, timezone, url, xml_url, lr_length, scraping_hours, 
-                         hours_from_max, count, yes_price, balance_min):
+                         minutes_from_max, count, yes_price, balance_min):
     
 
     util_functions.logging_settings()
@@ -81,7 +81,8 @@ def scrape_dynamic_table(driver, city, market, timezone, url, xml_url, lr_length
                                                                         lr_length=lr_length,
                                                                         timezone=timezone, 
                                                                         xml_url=xml_url,
-                                                                        hours_from_max= hours_from_max)
+                                                                        minutes_from_max= minutes_from_max,
+                                                                        market=market)
                     if trade_criteria:
                         
                         trade_execute = trade_functions.trade_execution(temperatures=temperatures,

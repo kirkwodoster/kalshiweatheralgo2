@@ -3,7 +3,7 @@ import numpy as np
 import pandas as pd
 from sklearn.linear_model import LinearRegression
 from selenium.webdriver.common.by import By
-from datetime import datetime
+from datetime import datetime, timedelta
 import xml.etree.ElementTree as ET
 import logging
 import uuid
@@ -41,7 +41,7 @@ def if_temp_reaches_max(current_temp: int, market: str, yes_price: int, count: i
             market_ticker = util_functions.order_pipeline(highest_temp=current_temp, market=market)
             order_id = str(uuid.uuid4())
             client.create_order(ticker=market_ticker,client_order_id=order_id,count=count,yes_price=yes_price)
-            logging.info(f"Max temp reached and bet made {current_temp}")
+            logging.info(f"Max temp reached and order created {current_temp}")
          
             return True
         else:
@@ -50,21 +50,30 @@ def if_temp_reaches_max(current_temp: int, market: str, yes_price: int, count: i
         logging.info(f'if_temp_reaches_max : {e}')
     
     
-def trade_criteria_met(temperatures: list, lr_length: int, timezone, xml_url: str, hours_from_max: int):
+def trade_criteria_met(temperatures: list, lr_length: int, timezone, xml_url: str, minutes_from_max: int, market: str):
     
     try:
-        current_time = datetime.now(timezone).hour
+        current_time = datetime.now(timezone)
         hour_max_temp = scrape_functions.xml_scrape(xml_url, timezone)[1]
 
-        trade_range = (current_time >= hour_max_temp - hours_from_max) and (current_time <= hour_max_temp + hours_from_max)
+        #trade_range = (current_time >= hour_max_temp - minutes_from_max) and (current_time <= hour_max_temp + minutes_from_max)
+        trade_range = (current_time >= hour_max_temp - timedelta(minutes=minutes_from_max)) and \
+                      (current_time <= hour_max_temp + timedelta(minutes=minutes_from_max))
+        
         length = len(temperatures) >= lr_length
+        
+        highest_temp = np.array(temperatures).max()
+        order_pipeline_check = util_functions.order_pipeline(highest_temp=highest_temp, market=market)
 
-        if trade_range and length:
+        if trade_range and length and order_pipeline_check:
             x = np.arange(0, lr_length).reshape(-1,1)
             temp_length = temperatures[-lr_length:]
             regressor = LinearRegression().fit(x, temp_length)
             slope = regressor.coef_
             if slope <= 0:
+                logging.info(f"Slope: {slope}")
+                logging.info(f"X: {temp_length}")
+                logging.info(f"Max Temp: {highest_temp}")
                 return True
             else:
                 False

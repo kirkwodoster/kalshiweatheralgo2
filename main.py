@@ -25,9 +25,8 @@ from weatheralgo.clients import client
 if __name__ == "__main__":
     
 
-    #  x = client.get_fills(ticker = 'KXHIGHDEN-25FEB20-B26.5')
-    #  print(x)
     
+
 
     input = Input()
     input.user_input_function()

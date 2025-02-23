@@ -47,7 +47,7 @@ class Input:
         self.city = None  # Initialize city
         self.LR_LENGTH = 5
         self.SCRAPING_HOURS = (9,16)
-        self.HOURS_FROM_MAX = 0
+        self.MINUTES_FROM_MAX = 15
         self.COUNT = 1
         self.YES_PRICE = 85
         self.BALANCE_MIN = 100
@@ -89,8 +89,8 @@ class Input:
                 
                 while True: # Loop for trade_execution_hours input
                     try:
-                        self.HOURS_FROM_MAX = int(input("HOURS FROM MAX PREDICTED TEMPERATURE : "))
-                        # print(f"HOURS FROM EXPECTED MAX TEMPERATURE: {self.HOURS_FROM_MAX}")
+                        self.MINUTES_FROM_MAX = int(input("MINUTES FROM MAX PREDICTED TEMPERATURE : "))
+                        # print(f"HOURS FROM EXPECTED MAX TEMPERATURE: {self.MINUTES_FROM_MAX}")
                         break
                     except ValueError:
                         print("Invalid input. Please enter an integer.")
@@ -137,7 +137,7 @@ class Input:
             'xml_url': self.market['XML_URL'],
             'lr_length': self.LR_LENGTH,
             'scraping_hours': self.SCRAPING_HOURS,
-            'hours_from_max': self.HOURS_FROM_MAX,
+            'MINUTES_FROM_MAX': self.MINUTES_FROM_MAX,
             'count': self.COUNT,
             'yes_price': self.YES_PRICE,
             'balance_min': self.BALANCE_MIN

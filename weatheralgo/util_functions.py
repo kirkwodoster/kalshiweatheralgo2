@@ -130,7 +130,7 @@ def trade_today(market, timezone):
         orders = client.get_orders(event_ticker=event)['orders']
         
         if len(orders) >= 1:
-            logging.info('Trade made today')
+           
             return True
         else:
             return False
@@ -156,6 +156,8 @@ def order_filled(market):
             else:
                 # Do nothing if the order status is not 'executed'
                 pass
+        else:
+            logging.info(f"No orders found for {market_ticker}")
         
     except Exception as e:
         logging.error(f"Order Filled error: {e}")
