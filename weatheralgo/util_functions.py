@@ -156,9 +156,7 @@ def order_filled(market):
             else:
                 # Do nothing if the order status is not 'executed'
                 pass
-        else:
-            logging.info(f"No orders found for {market_ticker}")
-        
+          
     except Exception as e:
         logging.error(f"Order Filled error: {e}")
             
