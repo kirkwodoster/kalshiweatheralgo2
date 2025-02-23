@@ -114,9 +114,12 @@ def order_pipeline(highest_temp: int, market: str):
             for key, value in listofMarketsAdj.items():
                 if highest_temp == value:
                     tempMarket = key
-                
-        
-        return f'{event}-{tempMarket}'
+
+        if tempMarket:        
+            return f'{event}-{tempMarket}'
+        else:
+            return False
+            
     except Exception as e:
         logging.info(f"order_pipeline {e}")
 
@@ -156,7 +159,7 @@ def order_filled(market):
             else:
                 # Do nothing if the order status is not 'executed'
                 pass
-          
+        
     except Exception as e:
         logging.error(f"Order Filled error: {e}")
             

@@ -54,11 +54,11 @@ def trade_criteria_met(temperatures: list, lr_length: int, timezone, xml_url: st
     
     try:
         current_time = datetime.now(timezone)
-        hour_max_temp = scrape_functions.xml_scrape(xml_url, timezone)[1]
+        minute_max_temp = scrape_functions.xml_scrape(xml_url, timezone)[0]
 
         #trade_range = (current_time >= hour_max_temp - minutes_from_max) and (current_time <= hour_max_temp + minutes_from_max)
-        trade_range = (current_time >= hour_max_temp - timedelta(minutes=minutes_from_max)) and \
-                      (current_time <= hour_max_temp + timedelta(minutes=minutes_from_max))
+        trade_range = (current_time >= minute_max_temp - timedelta(minutes=minutes_from_max)) and \
+                      (current_time <= minute_max_temp + timedelta(minutes=minutes_from_max))
         
         length = len(temperatures) >= lr_length
         
