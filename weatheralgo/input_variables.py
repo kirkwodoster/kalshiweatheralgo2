@@ -137,7 +137,7 @@ class Input:
             'xml_url': self.market['XML_URL'],
             'lr_length': self.LR_LENGTH,
             'scraping_hours': self.SCRAPING_HOURS,
-            'MINUTES_FROM_MAX': self.MINUTES_FROM_MAX,
+            'minutes_from_max': self.MINUTES_FROM_MAX,
             'count': self.COUNT,
             'yes_price': self.YES_PRICE,
             'balance_min': self.BALANCE_MIN
