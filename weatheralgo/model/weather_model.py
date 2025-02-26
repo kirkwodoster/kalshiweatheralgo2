@@ -38,12 +38,13 @@ def scrape_dynamic_table(driver, city, market, timezone, url, xml_url, lr_length
     temperatures = []
     dates = []
     
-    restart_threshold = 40  # Restart WebDriver every 50 iterations
+    restart_threshold = 20  # Restart WebDriver every 50 iterations
     loop_counter = 0
 
-    rand = random.randint(20, 40)
-
-    logging.info(f'Algo Loading in {city}')
+    rand = random.randint(15, 30)
+    expected_high = scrape_functions.xml_scrape(xml_url, timezone)[2]
+    expected_hour = scrape_functions.xml_scrape(xml_url, timezone)[1]
+    logging.info(f'Algo Loading in {city} expected high: {expected_high} and expected high hour {expected_hour}')
 
     while True:
         begin_scraping = scrape_functions.begin_scrape(timezone=timezone, scraping_hours=scraping_hours)

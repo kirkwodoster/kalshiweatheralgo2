@@ -26,8 +26,6 @@ if __name__ == "__main__":
     
 
     
-
-
     input = Input()
     input.user_input_function()
 

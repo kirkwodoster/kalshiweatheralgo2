@@ -121,7 +121,10 @@ def order_pipeline(highest_temp: int, market: str):
             return False
             
     except Exception as e:
-        logging.info(f"order_pipeline {e}")
+         if "tempMarket" not in  str(e):
+            logging.info(f"order_pipeline {e}")
+    except:
+        None
 
 
 def trade_today(market, timezone):
